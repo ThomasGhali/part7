@@ -5,21 +5,27 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import { showNotification } from './reducers/notificationsReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
   const blogFormRef = useRef()
+
+  // redux states
+  const notification = useSelector((state) => state.notifications)
+
+  const dispatch = useDispatch()
 
   // fetch blogs
   useEffect(() => {
     blogService
       .getAll()
       .then((blogs) => setBlogs(blogs))
-      .catch((error) => showNotification(error.message))
+      .catch((error) => dispatch(showNotification(error.message)))
   }, [])
 
   // check saved loggins onMount
@@ -32,11 +38,6 @@ const App = () => {
     }
   }, [])
 
-  const showNotification = (message, isError = false) => {
-    setNotification({ message, isError })
-    setTimeout(() => setNotification(null), 5000)
-  }
-
   const getBlogs = () => blogService.getAll().then((blogs) => setBlogs(blogs))
 
   const handleLogin = async (event) => {
@@ -46,7 +47,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogsAppUser', JSON.stringify(user))
       setUser(user)
-      showNotification(`Welcome back ${username}`, true)
+      dispatch(showNotification(`Welcome back ${username}`, true))
       setUsername('')
       setPassword('')
       blogService.setToken(user.token)
@@ -57,7 +58,7 @@ const App = () => {
         error.response?.status === 500
           ? 'Cannot connect to server'
           : 'wrong username or password'
-      showNotification(errorMsg)
+      dispatch(showNotification(errorMsg))
     }
   }
 
@@ -67,22 +68,22 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       await getBlogs()
 
-      showNotification(
+      dispatch(showNotification(
         `a new blog ${newBlog.title} by ${newBlog.author} added`,
         true
-      )
+      ))
     } catch (error) {
       const errorMsg =
         error.response?.status === 500
           ? 'Cannot connect to server'
           : 'unable to create new blog'
-      showNotification(errorMsg)
+      dispatch(showNotification(errorMsg))
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogsAppUser')
-    showNotification('logged out successfully', true)
+    dispatch(showNotification('logged out successfully', true))
     setUser(null)
     setBlogs([])
   }
@@ -136,7 +137,6 @@ const App = () => {
             loggedUser={user.name}
             blog={blog}
             addLike={addLike}
-            showNotification={showNotification}
             setBlogs={setBlogs}
           />
         ))}
@@ -146,7 +146,7 @@ const App = () => {
 
   return (
     <>
-      {notification && <Notification notification={notification} />}
+      {notification && <Notification />}
       {user === null ? (
         <>
           <h2>Log in:</h2>

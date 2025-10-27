@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { showNotification } from '../reducers/notificationsReducer'
+import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, setBlogs, addLike, showNotification, loggedUser }) => {
+const Blog = ({ blog, setBlogs, addLike, loggedUser }) => {
   const [visibility, setVisibility] = useState(false)
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -20,13 +23,13 @@ const Blog = ({ blog, setBlogs, addLike, showNotification, loggedUser }) => {
     try {
       await blogService.deleteBlog(blog.id)
       setBlogs((prev) => prev.filter((b) => b.id !== blog.id))
-      showNotification('Blog deleted', true)
+      dispatch(showNotification('Blog deleted', true))
     } catch (error) {
       const errorMsg =
         error.status === 401
           ? 'User unauthorized to do such action'
           : error.message
-      showNotification(errorMsg)
+      dispatch(showNotification(errorMsg))
     }
   }
 
