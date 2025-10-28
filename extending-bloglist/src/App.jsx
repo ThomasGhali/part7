@@ -7,9 +7,10 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { showNotification } from './reducers/notificationsReducer'
 import { useDispatch, useSelector } from 'react-redux'
+import { createBlog, fetchBlogs, setBlogs } from './reducers/blogsReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // react states
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -17,16 +18,14 @@ const App = () => {
 
   // redux states
   const notification = useSelector((state) => state.notifications)
+  const blogs = useSelector((state) => state.blogs)
 
   const dispatch = useDispatch()
 
   // fetch blogs
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs))
-      .catch((error) => dispatch(showNotification(error.message)))
-  }, [])
+    dispatch(fetchBlogs())
+  }, [dispatch])
 
   // check saved loggins onMount
   useEffect(() => {
@@ -37,8 +36,6 @@ const App = () => {
       blogService.setToken(userData.token)
     }
   }, [])
-
-  const getBlogs = () => blogService.getAll().then((blogs) => setBlogs(blogs))
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -52,7 +49,7 @@ const App = () => {
       setPassword('')
       blogService.setToken(user.token)
 
-      await getBlogs()
+      dispatch(fetchBlogs())
     } catch (error) {
       const errorMsg =
         error.response?.status === 500
@@ -64,14 +61,8 @@ const App = () => {
 
   const handleCreateBlog = async (newBlog) => {
     try {
-      await blogService.createBlog(newBlog)
+      await dispatch(createBlog(newBlog))
       blogFormRef.current.toggleVisibility()
-      await getBlogs()
-
-      dispatch(showNotification(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`,
-        true
-      ))
     } catch (error) {
       const errorMsg =
         error.response?.status === 500
@@ -85,7 +76,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogsAppUser')
     dispatch(showNotification('logged out successfully', true))
     setUser(null)
-    setBlogs([])
+    dispatch(setBlogs([]))
   }
 
   const loginForm = () => (
