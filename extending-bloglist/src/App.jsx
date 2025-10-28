@@ -107,13 +107,13 @@ const App = () => {
     </>
   )
 
-  const addLike = async (blog) => {
-    await blogService.updateBlog({ ...blog, likes: blog.likes + 1 })
+  // const addLike = async (blog) => {
+  //   await blogService.updateBlog({ ...blog, likes: blog.likes + 1 })
 
-    setBlogs((prev) =>
-      prev.map((b) => (b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
-    )
-  }
+  //   setBlogs((prev) =>
+  //     prev.map((b) => (b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
+  //   )
+  // }
 
   const blogListRender = () => {
     const sortBlogs = [...blogs].sort(
@@ -127,8 +127,6 @@ const App = () => {
             key={blog.id}
             loggedUser={user.name}
             blog={blog}
-            addLike={addLike}
-            setBlogs={setBlogs}
           />
         ))}
       </>

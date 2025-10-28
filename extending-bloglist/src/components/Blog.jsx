@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
-import { showNotification } from '../reducers/notificationsReducer'
 import { useDispatch } from 'react-redux'
+import { addLike, deleteBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, setBlogs, addLike, loggedUser }) => {
+const Blog = ({ blog, loggedUser }) => {
   const [visibility, setVisibility] = useState(false)
   const dispatch = useDispatch()
 
@@ -16,22 +15,6 @@ const Blog = ({ blog, setBlogs, addLike, loggedUser }) => {
     marginBottom: 5,
   }
   const InfoDisplay = { display: visibility ? '' : 'none' }
-
-  const handleRemove = async () => {
-    if (!window.confirm(`Remove ${blog.title} by ${blog.author}?`)) return
-
-    try {
-      await blogService.deleteBlog(blog.id)
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id))
-      dispatch(showNotification('Blog deleted', true))
-    } catch (error) {
-      const errorMsg =
-        error.status === 401
-          ? 'User unauthorized to do such action'
-          : error.message
-      dispatch(showNotification(errorMsg))
-    }
-  }
 
   return (
     <>
@@ -49,13 +32,13 @@ const Blog = ({ blog, setBlogs, addLike, loggedUser }) => {
           <div>{blog.url}</div>
           <div>
             <span className="likes-count">Likes: {blog.likes}</span>{' '}
-            <button onClick={() => addLike(blog)} className="like-btn">
+            <button onClick={() => dispatch(addLike(blog))} className="like-btn">
               like
             </button>
           </div>
           <div>{blog.user.name}</div>
           {loggedUser === blog.user.name && (
-            <button onClick={handleRemove}>Remove</button>
+            <button onClick={() => dispatch(deleteBlog(blog))}>Remove</button>
           )}
         </div>
       </div>
