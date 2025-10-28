@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addLike, deleteBlog } from '../reducers/blogsReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { addLike, deleteBlog } from '../slices/blogsSlice'
 
-const Blog = ({ blog, loggedUser }) => {
+const Blog = ({ blog }) => {
   const [visibility, setVisibility] = useState(false)
   const dispatch = useDispatch()
+
+  const loggedUser = useSelector(state => state.user).name
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,7 +25,7 @@ const Blog = ({ blog, loggedUser }) => {
           {blog.title} {blog.author}
           <button
             className="view-btn"
-            onClick={() => setVisibility((prev) => !prev)}
+            onClick={() => setVisibility(prev => !prev)}
           >
             {visibility ? 'hide' : 'view'}
           </button>
@@ -32,7 +34,10 @@ const Blog = ({ blog, loggedUser }) => {
           <div>{blog.url}</div>
           <div>
             <span className="likes-count">Likes: {blog.likes}</span>{' '}
-            <button onClick={() => dispatch(addLike(blog))} className="like-btn">
+            <button
+              onClick={() => dispatch(addLike(blog))}
+              className="like-btn"
+            >
               like
             </button>
           </div>

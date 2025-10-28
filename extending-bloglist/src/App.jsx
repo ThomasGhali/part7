@@ -5,20 +5,21 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import { showNotification } from './reducers/notificationsReducer'
+import { showNotification } from './slices/notificationsSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { createBlog, fetchBlogs, setBlogs } from './reducers/blogsReducer'
+import { createBlog, fetchBlogs, setBlogs } from './slices/blogsSlice'
+import { setUser } from './slices/userSlice'
 
 const App = () => {
   // react states
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const blogFormRef = useRef()
 
   // redux states
-  const notification = useSelector((state) => state.notifications)
-  const blogs = useSelector((state) => state.blogs)
+  const notification = useSelector(state => state.notifications)
+  const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
@@ -32,18 +33,18 @@ const App = () => {
     const loggedInUser = window.localStorage.getItem('loggedBlogsAppUser')
     if (loggedInUser) {
       const userData = JSON.parse(loggedInUser)
-      setUser(userData)
+      dispatch(setUser(userData))
       blogService.setToken(userData.token)
     }
-  }, [])
+  }, [dispatch])
 
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogsAppUser', JSON.stringify(user))
-      setUser(user)
+      dispatch(setUser(user))
       dispatch(showNotification(`Welcome back ${username}`, true))
       setUsername('')
       setPassword('')
@@ -59,7 +60,7 @@ const App = () => {
     }
   }
 
-  const handleCreateBlog = async (newBlog) => {
+  const handleCreateBlog = async newBlog => {
     try {
       await dispatch(createBlog(newBlog))
       blogFormRef.current.toggleVisibility()
@@ -75,7 +76,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogsAppUser')
     dispatch(showNotification('logged out successfully', true))
-    setUser(null)
+    dispatch(setUser(null))
     dispatch(setBlogs([]))
   }
 
@@ -107,14 +108,6 @@ const App = () => {
     </>
   )
 
-  // const addLike = async (blog) => {
-  //   await blogService.updateBlog({ ...blog, likes: blog.likes + 1 })
-
-  //   setBlogs((prev) =>
-  //     prev.map((b) => (b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
-  //   )
-  // }
-
   const blogListRender = () => {
     const sortBlogs = [...blogs].sort(
       (blogA, blogB) => blogB.likes - blogA.likes
@@ -122,12 +115,8 @@ const App = () => {
 
     return (
       <>
-        {sortBlogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            loggedUser={user.name}
-            blog={blog}
-          />
+        {sortBlogs.map(blog => (
+          <Blog key={blog.id} blog={blog} />
         ))}
       </>
     )
