@@ -1,0 +1,16 @@
+post http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "thomas1221",
+  "password": "passcode123"
+}
+
+### login with another user
+post http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "hedgehog123",
+  "password": "passcode123"
+}

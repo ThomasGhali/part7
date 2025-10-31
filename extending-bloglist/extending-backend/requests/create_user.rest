@@ -1,0 +1,20 @@
+// token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRob21hczEyMjEiLCJpZCI6IjY4ZDY5YTI3MWQ2ZDI1NmViZDNhZjY5MCIsImlhdCI6MTc1ODk3MTU2MH0._rN1hNOC1YyAfIZIQq5cOKM7q1nfzllCRYx3vh0S0zU
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "thomas1221",
+  "name": "Thomas Ghali",
+  "password": "passcode123"
+}
+
+### another user
+// token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlZGdlaG9nMTIzIiwiaWQiOiI2OGQ3YzYzMzkyOGM4Y2ZiMTk3YWU0ZjQiLCJpYXQiOjE3NTg5NzE1MzB9.gklg7sAE-Y65jqmltYtnIFNThLzGdXIp7llB8iFXZBI
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "hedgehog123",
+  "name": "Sonic",
+  "password": "passcode123"
+}

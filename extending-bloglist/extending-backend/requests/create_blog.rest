@@ -1,0 +1,21 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "normal title",
+  "author": "Thomas Ghali",
+  "url": "this is a url i guess",
+  "like": 21
+}
+
+### create blog using token
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRob21hczEyMjEiLCJpZCI6IjY4ZDY5YTI3MWQ2ZDI1NmViZDNhZjY5MCIsImlhdCI6MTc1ODkwODE5NX0.zE7WgXiVqfsOHoIQJm-OavrfApVY_SZeC3-kIGdJ6-Y
+
+{
+  "title": "brand new title",
+  "author": "shalaboka",
+  "url": "url placeholder",
+  "likes": 9991
+}
