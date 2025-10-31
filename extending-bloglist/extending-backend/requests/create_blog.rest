@@ -11,11 +11,40 @@ Content-Type: application/json
 ### create blog using token
 post http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRob21hczEyMjEiLCJpZCI6IjY4ZDY5YTI3MWQ2ZDI1NmViZDNhZjY5MCIsImlhdCI6MTc1ODkwODE5NX0.zE7WgXiVqfsOHoIQJm-OavrfApVY_SZeC3-kIGdJ6-Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRob21hczEyMjEiLCJpZCI6IjY5MDUwNWI1ODAzYzk0MzVhMzcyN2ZiZSIsImlhdCI6MTc2MTkzNzQwNn0.5YseTay9_ElglgmGuW3-kXomohzhvCCmh6KLnH1alKw
 
 {
   "title": "brand new title",
   "author": "shalaboka",
-  "url": "url placeholder",
-  "likes": 9991
+  "url": "url placeholder"
+}
+###
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRob21hczEyMjEiLCJpZCI6IjY5MDUwNWI1ODAzYzk0MzVhMzcyN2ZiZSIsImlhdCI6MTc2MTkzNzQwNn0.5YseTay9_ElglgmGuW3-kXomohzhvCCmh6KLnH1alKw
+
+{
+  "title": "how learn something",
+  "author": "dr.prince",
+  "url": "do-something.com"
+}
+###
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlZGdlaG9nMTIzIiwiaWQiOiI2OTA1MDVjNjgwM2M5NDM1YTM3MjdmYzAiLCJpYXQiOjE3NjE5Mzc0MzR9.L1yOlR6B_f3PekM54USjhSfIIRAQBWWlpRvduaZ7rls
+
+{
+  "title": "get promoted fast",
+  "author": "ahmed galal",
+  "url": "somewhere-else.com"
+}
+###
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlZGdlaG9nMTIzIiwiaWQiOiI2OTA1MDVjNjgwM2M5NDM1YTM3MjdmYzAiLCJpYXQiOjE3NjE5Mzc0MzR9.L1yOlR6B_f3PekM54USjhSfIIRAQBWWlpRvduaZ7rls
+
+{
+  "title": "full time learning",
+  "author": "tommy",
+  "url": "here-we-go-again.com"
 }

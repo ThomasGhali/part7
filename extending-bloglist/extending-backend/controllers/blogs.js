@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
@@ -61,6 +62,15 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if (blog.user._id.toString() !== user._id.toString()) {
     return response.status(401).json({ error: 'user unauthorized' })
+  }
+
+  const result = await User.updateOne(
+    { blogs: blogId },
+    { $pull: { blogs: blogId } }
+  )
+
+  if (result.modifiedCount === 0) {
+    return response.status(400).json({ error: 'user doesn\'t have that blog in his blogs array' })
   }
 
   await blog.deleteOne()
