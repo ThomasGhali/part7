@@ -1,24 +1,26 @@
-import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useState, useEffect } from 'react'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
-import { showNotification } from './slices/notificationsSlice'
+import Users from './components/Users'
+import Blogs from './components/Blogs'
+
 import { useDispatch, useSelector } from 'react-redux'
-import { createBlog, fetchBlogs, setBlogs } from './slices/blogsSlice'
+import { showNotification } from './slices/notificationsSlice'
+import { fetchBlogs, setBlogs } from './slices/blogsSlice'
 import { setUser } from './slices/userSlice'
+
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
   // react states
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const blogFormRef = useRef()
 
   // redux states
   const notification = useSelector(state => state.notifications)
-  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
@@ -60,19 +62,6 @@ const App = () => {
     }
   }
 
-  const handleCreateBlog = async newBlog => {
-    try {
-      await dispatch(createBlog(newBlog))
-      blogFormRef.current.toggleVisibility()
-    } catch (error) {
-      const errorMsg =
-        error.response?.status === 500
-          ? 'Cannot connect to server'
-          : 'unable to create new blog'
-      dispatch(showNotification(errorMsg))
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogsAppUser')
     dispatch(showNotification('logged out successfully', true))
@@ -108,18 +97,8 @@ const App = () => {
     </>
   )
 
-  const blogListRender = () => {
-    const sortBlogs = [...blogs].sort(
-      (blogA, blogB) => blogB.likes - blogA.likes
-    )
-
-    return (
-      <>
-        {sortBlogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </>
-    )
+  const padding = {
+    padding: 5,
   }
 
   return (
@@ -137,10 +116,20 @@ const App = () => {
             {user.name} is logged in{' '}
             <button onClick={handleLogout}>Log out</button>
           </p>
-          <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
-            <BlogForm createBlog={handleCreateBlog} />
-          </Togglable>
-          {blogListRender()}
+          <Router>
+            <div>
+              <Link style={padding} to="/">
+                home
+              </Link>
+              <Link style={padding} to="/users">
+                users
+              </Link>
+            </div>
+            <Routes>
+              <Route path="/" element={<Blogs />} />
+              <Route path="/users" element={<Users />} />
+            </Routes>
+          </Router>
         </>
       )}
     </>
