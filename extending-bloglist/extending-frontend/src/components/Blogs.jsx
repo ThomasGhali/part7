@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
-import Blog from './Blog'
+import BlogItem from './BlogItem'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
-import { createBlog } from '../slices/blogsSlice'
+import { createBlog, fetchBlogs } from '../slices/blogsSlice'
 import { showNotification } from '../slices/notificationsSlice'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
 const Blogs = () => {
   const dispatch = useDispatch()
@@ -12,9 +12,16 @@ const Blogs = () => {
   // redux states
   const blogs = useSelector(state => state.blogs)
 
+  // fetch blogs
+  useEffect(() => {
+    dispatch(fetchBlogs())
+  }, [dispatch])
+
   const blogFormRef = useRef()
 
   const blogListRender = () => {
+    if (!blogs || blogs.length === 0) return <>loading ...</>
+
     const sortBlogs = [...blogs].sort(
       (blogA, blogB) => blogB.likes - blogA.likes
     )
@@ -22,7 +29,7 @@ const Blogs = () => {
     return (
       <>
         {sortBlogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
+          <BlogItem key={blog.id} blog={blog} />
         ))}
       </>
     )

@@ -6,7 +6,7 @@ const Blog = ({ blog }) => {
   const [visibility, setVisibility] = useState(false)
   const dispatch = useDispatch()
 
-  const loggedUser = useSelector(state => state.user).name
+  const loggedUser = useSelector(state => state.loggedUser).name
 
   const blogStyle = {
     paddingTop: 10,

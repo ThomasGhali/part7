@@ -1,31 +1,26 @@
-import usersService from '../services/users'
-import { showNotification } from '../slices/notificationsSlice'
-import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { saveUsers } from '../slices/usersSlice'
 
-const User = ({ user }) => {
+const UserItem = ({ user }) => {
   return (
     <tr>
-      <td>{user.name}</td>
+      <td>
+        <Link to={`/users/${user.id}`}>{user.name}</Link>
+      </td>
       <td>{user.blogs.length}</td>
     </tr>
   )
 }
 
 const Users = () => {
-  const [users, setUsers] = useState([])
+  const users = useSelector(state => state.users)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const fetchedUsers = await usersService.getUsers()
-        setUsers(fetchedUsers)
-      } catch (error) {
-        showNotification(error)
-      }
-    }
-
-    fetchUsers()
-  }, [])
+    dispatch(saveUsers())
+  }, [dispatch])
 
   return (
     <>
@@ -38,9 +33,11 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
-            <User user={user} key={user.id} />
-          ))}
+          {users ? (
+            users.map(user => <UserItem user={user} key={user.id} />)
+          ) : (
+            <p>There appears to be no users</p>
+          )}
         </tbody>
       </table>
     </>
